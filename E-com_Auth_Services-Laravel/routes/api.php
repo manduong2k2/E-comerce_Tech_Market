@@ -19,43 +19,6 @@ Route::get('/protected', function () {
     return 'Authenticated success';
 })->middleware(Authorize::class);
 
-//Product
-
-Route::get('/products',[productController::class,'index']);
-
-Route::get('/products/personal',[productController::class,'personal'])->middleware(Authenticate::class);
-
-Route::get('/products/{id}',[productController::class,'show']);
-
-Route::post('/product/create',[productController::class,'create'])->middleware(Authenticate::class);
-
-Route::post('/product/edit/{id}',[productController::class,'edit']);
-
-Route::delete('/product/{id}',[productController::class,'destroy'])->middleware(Authorize::class);
-
-//Brand
-
-Route::get('/brands',[brandController::class,'index']);
-
-Route::get('/brand/{id}',[brandController::class,'show']);
-
-Route::post('/brand/create',[brandController::class,'create']);
-
-Route::delete('/brand/delete/{id}',[brandController::class,'destroy']);
-
-Route::post('/brand/edit/{id}',[brandController::class,'edit']);
-
-//Category
-
-Route::get('/categories',[categoryController::class,'index']);
-
-Route::get('/category/{id}',[categoryController::class,'show']);
-
-Route::post('/category/create',[categoryController::class,'create']);
-
-Route::post('/category/edit/{id}',[categoryController::class,'edit']);
-
-Route::delete('/category/delete/{id}',[categoryController::class,'destroy']);
 
 //User
 
@@ -81,24 +44,5 @@ Route::post('/grant/{id}',[userController::class,'grant'])->middleware(Authorize
 
 Route::post('/revoke/{id}',[userController::class,'revoke'])->middleware(Authorize::class);
 
-//Cart
-
-Route::get('/carts',[cartController::class,'index'])->middleware(Authenticate::class);
-
-Route::post('/cart/add/{product_id}',[cartController::class,'create'])->middleware(Authenticate::class);
-
-Route::post('/cart/increase/{product_id}',[cartController::class,'increase'])->middleware(Authenticate::class);
-
-Route::post('/cart/decrease/{product_id}',[cartController::class,'decrease'])->middleware(Authenticate::class);
-
-Route::delete('/cart/delete/{product_id}',[cartController::class,'destroy'])->middleware(Authenticate::class);
-
-Route::delete('/cart/deleteAll',[cartController::class,'destroyAll'])->middleware(Authenticate::class);
-
-//Order
-
-Route::get('/orders',[orderController::class,'index'])->middleware(Authenticate::class);
-
-Route::post('/order',[orderController::class,'create'])->middleware(Authenticate::class);
 
 
