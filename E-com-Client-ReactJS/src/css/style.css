@@ -1,0 +1,447 @@
+h1 {
+  color: #333;
+}
+
+.text-center {
+  color: white;
+}
+/* .product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }*/
+.form-container{
+  margin-bottom: 10px;
+}
+.col-md-3 {
+  width: 20%;
+}
+.navbar{
+  background: #000  ;
+}
+.product-item, .post-item {
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.btn-add{
+  margin: 10px;
+  margin-right: 84%;
+}
+h2{
+  margin-right: 70%;
+}
+.product-item img {
+  margin: auto;
+  height: 250px;
+  border-radius: 5px;
+}
+.product-item h2, .right-post h4 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.nav-link,
+.navbar-brand {
+  color: floralwhite;
+  transition: 0.3s ease-in-out;
+}
+
+nav {
+  background-color: hsl(218, 41%, 21%);
+  height: 90px;
+}
+
+.nav-brand:hover,
+.navbar-nav a:hover {
+  color: hsl(218, 36%, 75%);
+  scale: 1.02;
+}
+.nav-link {
+  margin-left: 12px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.icon-nav {
+  background-color: #ccc;
+}
+
+.navbar-nav .nav-link {
+  color: floralwhite;
+  transition: 0.3s ease-in-out;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  color: hsl(218, 36%, 75%);
+  scale: 1.02;
+  text-decoration: underline;
+}
+
+.brand,
+.category {
+  margin-top: 10px;
+}
+
+#accountImage {
+  border-radius: 40px;
+}
+
+.btn-floating {
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #44536a;
+  padding: 8px 16px;
+  border-radius: 7px;
+}
+
+#log {
+  position: absolute;
+  right: 0;
+  margin-right: 30px;
+  bottom: 1px;
+}
+#drop1{
+  width: 170px;
+}
+.dropdown-menu {
+  transform: translate(-50px);
+  width: 150px;
+  min-width: auto;
+}
+
+.btn-floating:hover {
+  background-color: #2a446d;
+}
+
+.background-radial-gradient {
+  background-image: radial-gradient(
+    650px circle at 0% 0%,
+    #000 15%, /* Chuyển từ màu tím sang đen */
+    #000 35%, /* Màu này có thể thay đổi */
+    hsl(218, 41%, 20%) 75%,
+    hsl(218, 41%, 19%) 80%,
+    transparent 100%
+  ), 
+  radial-gradient(
+    1250px circle at 100% 100%,
+    #000 15%, /* Chuyển từ màu tím sang đen */
+    #000 35%, /* Màu này có thể thay đổi */
+    hsl(218, 41%, 20%) 75%,
+    hsl(218, 41%, 19%) 80%,
+    transparent 100%
+  );
+
+
+}
+
+#radius-shape-1 {
+  height: 220px;
+  width: 220px;
+  top: -60px;
+  left: -130px;
+  background: radial-gradient(#44006b, #ad1fff);
+  overflow: hidden;
+}
+
+#radius-shape-2 {
+  border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
+  bottom: -60px;
+  right: -110px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(#44006b, #ad1fff);
+  overflow: hidden;
+}
+
+.bg-glass {
+  height: auto;
+  border-radius: 20px;
+  background-color: transparent !important;
+  backdrop-filter: saturate(200%) blur(15px);
+}
+.selected1{
+  margin-left: 30px;
+}
+input[type="search"] {
+  width: 170px;
+  padding: 8px 20px 8px;
+  border: #000 solid 2px;
+  font-size: 18px;
+  border-radius: 25px;
+  background-position: 2% 50%;
+  margin-top: 10px;
+  background-repeat: no-repeat;
+  background-size: 30px;
+  background-color: transparent;
+  transition: 0.5s all ease-in-out;
+  filter: brightness(170%);
+  text-overflow: ellipsis;
+  right: 250px;
+  bottom: 5px;
+}
+.selected{
+  width: 300px;
+}
+label{
+  font-weight: bold;
+}
+input[type="search"]:focus,
+input[type="search"]:not(:placeholder-shown) {
+  width: 280px;
+  background-color: #fff;
+  filter: brightness(100%);
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #000; /* Đường viền 1px, màu xám nhạt */
+  padding: 8px; /* Khoảng cách từ nội dung đến đường viền */
+  text-align: center; /* Căn giữa nội dung trong ô */
+  vertical-align: middle;
+}
+
+#height-img td {
+  height: 131px;
+}
+.nav-item.nav-main {
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+}
+
+.close-icon {
+  /* Styles for the close icon */
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+}
+
+.btn-cart{
+  border: 1px solid #000;
+  width: 120px;
+  border-radius: 40px;
+  margin:0 50%;
+}
+.nav-item a{
+  font-size:20px;
+}
+
+.nav-item i{
+  font-size:15px;
+}
+.active {
+  background-color: #2a446d;
+  transform: scale(1.1);
+}
+.user-icon:hover{
+  color: #ccc;
+}
+.drop2{
+  transform: translateX(-1px);
+}
+.user-dropdown:hover .dropdown-menu, .danhmuc-dropdown:hover .dropdown-menu{
+  display: block;
+}.dropdown-menu li {
+  margin-bottom: 5px;
+  text-align: center;
+}
+.price{
+  color:red;
+  font-size: 22px;
+}
+
+.info{
+font-size: 12px;
+    position: absolute;
+    right: 10px;
+    transform: translateY(-5px);
+}
+.dropdown-menu li a {
+  color: #333;
+  text-decoration: none;
+  font-size: 15;
+}
+.popup {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  background-color: #2a446d;
+  border-radius: 15px;
+  padding: 20px;
+  transform: translate(-50%, -50%);
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: zoom 0.5s ;
+  animation-timing-function:linear;
+}
+@keyframes zoom {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+#li-cart {
+  display: flex;
+  position: absolute;
+  right: 140px;
+}
+#li-cart:hover {
+  border: 0.5px solid white;
+  border-radius: 50px;
+}
+.cartIcon:hover{
+  transform: scale(1.5);
+}
+.disable-btn {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.product-item{
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-item:hover{
+  transform: scale(1.05);
+}
+.card:hover{
+  /* background-color: orange; */
+}
+.overlay {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  font-size: 24px;
+}
+#navMain li {
+  width: 120px;
+}
+.star-rated {
+  color: goldenrod;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.star-unrated {
+  color: black; 
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.star-unrated:hover{
+  color: goldenrod; 
+}
+.row-products {
+  display: flex;
+  overflow-x: auto; /* Cho phép thanh cuộn ngang */
+  white-space: nowrap; /* Ngăn các dòng mới xuất hiện */
+}
+
+.col-item {
+  flex: 0 0 auto; /* Không co dãn các cột */
+  margin-right: 10px; /* Khoảng cách giữa các cột */
+}
+#log{
+  margin-bottom: 12px;
+}
+.card-title{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
