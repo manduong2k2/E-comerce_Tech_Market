@@ -186,34 +186,6 @@ class userController extends Controller
         }
     }
 
-    public function sendEmail(string $email)
-    {
-        try {
-            $user = User::where('email',$email)->first();
-            $code = Str::random(6);
-            if ($user) {
-                Queue::push(new SendEmail(new RecoverMail($user,$code)));
-
-                $user->password = Hash::make($code);
-                $user->save();
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Send email to user success !',
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'user not found',
-                ]);
-            }
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => $e->__toString(),
-            ], 502);
-        }
-    }
-
     public function show()
     {
         try {
@@ -239,46 +211,5 @@ class userController extends Controller
             ], 502);
         }
     }
-    public function products()
-    {
-        try {
-            $token = JWTAuth::getToken();
-            $payload = JWTAuth::getPayload($token)->toArray();
-
-            $products= Product::with('brand','category')->where('user_id',$payload['user_id'])->get();
-
-            if ($products->isNotEmpty()) {
-                return response()->json($products);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'user not found',
-                ]);
-            }
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => $e->__toString(),
-            ], 502);
-        }
-    }
-    public function destroy(string $product_id)
-    {
-        try{
-            $token = JWTAuth::getToken();
-            $payload = JWTAuth::getPayload($token)->toArray();
-            
-            $product = Product::find($product_id);
-            if($product) {
-                $product->delete();
-                response()->json(['success' => 'Product deleted successfully !', 200]);
-            }
-            else{
-                response()->json(['success' => 'success', 404]);
-            }
-        }catch(Exception $e){
-            return response()->json([
-                'message' => $e->__toString(),
-            ], 501);
-        }
-    }
+    
 }
