@@ -1,7 +1,8 @@
 package com.example.E_com_Product_Services.Repositories;
 
-import com.example.E_com_Product_Services.Entities.Brand;
-import com.example.E_com_Product_Services.Generic.IGenericRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IBrandRepository extends IGenericRepository<Brand,Long> {
+import com.example.E_com_Product_Services.Entities.Brand;
+
+public interface IBrandRepository extends JpaRepository<Brand,Long> {
 }

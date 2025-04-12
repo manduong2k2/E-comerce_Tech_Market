@@ -2,7 +2,7 @@ package com.example.E_com_Product_Services.Controllers;
 
 import com.example.E_com_Product_Services.DTOs.ProductDTO;
 import com.example.E_com_Product_Services.Entities.Product;
-import com.example.E_com_Product_Services.Services.ProductService;
+import com.example.E_com_Product_Services.Interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,15 +19,25 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/products")
 public class ProductController {
     @Autowired
-    private ProductService productService;
+    private IProductService productService;
+
+    public ProductController(IProductService productService){
+        this.productService = productService;
+    }
 
     @GetMapping
-    public List<ProductDTO> showAllProducts() {
-        try {
-            return productService.getAll().stream().map(ProductDTO::fromProduct).collect(Collectors.toList());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+    public ResponseEntity<Map<String, Object>> showAllProducts(@RequestParam(required = false) Map<String, String> filters) {
+        try{
+            List<ProductDTO> filteredProducts;
+            if(filters.isEmpty()) filteredProducts = productService.getAll().stream().map(ProductDTO::fromProduct).collect(Collectors.toList());
+            filteredProducts = productService.getFiltered(filters).stream().map(ProductDTO::fromProduct).collect(Collectors.toList());
+            Map<String, Object> response = new HashMap<>();
+            response.put("products", filteredProducts);
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.ok(response);
         }
     }
 
@@ -40,7 +50,6 @@ public class ProductController {
                 response.put("message", "Product not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Product retrieved successfully");
             response.put("product", ProductDTO.fromProduct(product));
@@ -60,7 +69,7 @@ public class ProductController {
             @RequestParam(required = false) Long brand_id,
             @RequestParam(required = false) Long category_id) {
         try {
-            Product savedProduct = productService.saveWithDetails(file, product,brand_id,category_id);
+            Product savedProduct = productService.save(file, product,brand_id,category_id);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Product added successfully");
             response.put("product", ProductDTO.fromProduct(savedProduct));
@@ -87,7 +96,7 @@ public class ProductController {
                 response.put("message", "Product not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            Product updatedProduct = productService.updateWithDetails(file, existingProduct,product,brand_id,category_id);
+            Product updatedProduct = productService.update(file, existingProduct,product,brand_id,category_id);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Product updated successfully");
             response.put("product", ProductDTO.fromProduct(updatedProduct));
@@ -109,7 +118,7 @@ public class ProductController {
                 response.put("message", "Product not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            String deleteStatus = productService.delete(product);
+            boolean deleteStatus = productService.delete(product);
             Map<String, Object> response = new HashMap<>();
             response.put("message", deleteStatus);
             return ResponseEntity.ok(response);

@@ -22,13 +22,18 @@ public class BrandController {
     private BrandService brandService;
 
     @GetMapping
-    public List<BrandDTO> showAllBrands(){
+    public ResponseEntity<Map<String, Object>> showAllCategories(@RequestParam(required = false) Map<String, String> filters){
         try{
-            return brandService.getAll().stream().map(BrandDTO::fromBrand).collect(Collectors.toList());
-
+            List<BrandDTO> filterdBrands ;
+            if(filters.isEmpty()) filterdBrands = brandService.getAll().stream().map(BrandDTO::fromBrand).collect(Collectors.toList());
+            filterdBrands = brandService.getFiltered(filters).stream().map(BrandDTO::fromBrand).collect(Collectors.toList());
+            Map<String, Object> response = new HashMap<>();
+            response.put("brands", filterdBrands);
+            return ResponseEntity.ok(response);
         }catch (Exception e){
-            System.out.println(e.getMessage());
-            return null;
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.ok(response);
         }
     }
 
@@ -104,7 +109,7 @@ public class BrandController {
                 response.put("message", "Brand not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            String deleteStatus = brandService.delete(brand);
+            Boolean deleteStatus = brandService.delete(brand);
             Map<String, Object> response = new HashMap<>();
             response.put("message", deleteStatus);
             return ResponseEntity.ok(response);

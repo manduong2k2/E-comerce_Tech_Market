@@ -1,7 +1,5 @@
 package com.example.E_com_Product_Services.Entities;
 
-
-import com.example.E_com_Product_Services.Generic.IGeneric;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +15,7 @@ import org.hibernate.annotations.Nationalized;
 @Table(name="product")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product implements IGeneric<Long> {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -55,22 +53,4 @@ public class Product implements IGeneric<Long> {
     @JoinColumn(name="category_id",referencedColumnName = "id" )
     private Category category;
 
-    @Override
-    public void setImage(String url) {
-        this.image = url;
-    }
-
-    @Override
-    public String getType(){
-        return "Product";
-    }
-
-    @Override
-    public Long getId(){
-        return id;
-    }
-    @Override
-    public String getImage(){
-        return image;
-    }
 }

@@ -1,7 +1,8 @@
 package com.example.E_com_Product_Services.Repositories;
 
-import com.example.E_com_Product_Services.Entities.Category;
-import com.example.E_com_Product_Services.Generic.IGenericRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ICategoryRepository extends IGenericRepository<Category,Long> {
+import com.example.E_com_Product_Services.Entities.Category;
+
+public interface ICategoryRepository extends JpaRepository<Category,Long> {
 }
