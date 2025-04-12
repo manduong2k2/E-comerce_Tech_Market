@@ -11,11 +11,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
-                .requestMatchers( "/css/**", "/js/**","/providers","/products","/about","/assets/**", "/","/details/**","/img/**","/register",
-                        "/templates/error")
-                .permitAll())
+                        .anyRequest().permitAll()
+                )
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();

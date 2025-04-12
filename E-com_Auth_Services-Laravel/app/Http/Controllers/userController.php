@@ -2,214 +2,114 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NotificationSent;
-use App\Jobs\SendEmail;
-use App\Mail\RecoverMail;
-use App\Mail\UserNotification;
-use App\Models\Product;
-use App\Models\User;
+use App\Http\Contracts\Interfaces\IUserRepository;
+use App\Http\Requests\UserRequest;
+use App\Repositories\UserRepository;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Str;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class userController extends Controller
 {
-    
-
+    public UserRepository $userRepository;
+    /**
+     * Display a listing of the resource.
+     */
+    public function __construct(IUserRepository $iUserRepository)
+    {
+        $this->userRepository = $iUserRepository;
+    }
     public function index()
     {
         try {
-            $users = User::with(['roles'])->get();
-            return response()->json($users);
+            $users = $this->userRepository->all();
         } catch (Exception $e) {
             return response()->json([
                 'message' => $e->__toString()
             ], 502);
         }
     }
-    public function signup(Request $req)
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function signup(UserRequest $request)
     {
         try {
-            $validatedData = $req->validate([
-                'username' => 'required|string|max:255',
-                'fullname' => 'required|string|max:255',
-                'image' => 'required|file',
-                'email' => 'required|string|max:255',
-                'address' => 'string|max:255',
-                'password' => 'required|string|max:255',
-            ]);
-
-            $user = User::create($validatedData);
-
-            if ($req->hasFile('image')) {
-                $image = $req->file('image');
-                $imageName = $user->username . '.jpg';
-
-                $image->storeAs('public/images/user', $imageName);
-            }
-            $user->image = 'http://localhost/storage/images/user/' . $user->username . '.jpg';
-            $user->save();
+            $user = $this->userRepository->create($request->all());
             return response()->json([
-                'message' => 'User created successfully',
-                'data' => $user,
+                'message' => 'Account created successfully !'
             ], 201);
         } catch (Exception $e) {
             return response()->json([
                 'message' => $e->__toString(),
-                'req' => $req->all()
+                'request' => $request->all()
             ], 502);
         }
     }
-    public function login()
+
+    public function login(Request $request)
     {
         try {
-            $credentials = request(['email', 'password']);
-            $user = User::where('email', $credentials['email'])->first();
-            if(!$user)
-            $user = User::where('username', $credentials['email'])->first();
-            if ($user) {
-                $hashedPassword = $user->password;
-                if (Hash::check($credentials['password'], $hashedPassword)) {
-                    $token = JWTAuth::fromUser($user);
-                    return response()->json([
-                        'success' => true,
-                        'token' => $token,
-                    ]);
-                } else {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Invalid credentials',
-                    ]);
-                }
-            } else {
+            $authorization = $this->userRepository->authorize($request->all());
+            if (!$authorization)
                 return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid credentials',
-                ]);
-            }
+                    'message' => 'Invalid credential !'
+                ], 401);
+            return response()->json([
+                'message' => 'Login success !',
+                'token' => $authorization
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'message' => $e->__toString(),
-            ], 500);
-        }
-    }
-    public function edit(Request $req)
-    {
-        try {
-            $token = JWTAuth::getToken();
-            $payload = JWTAuth::getPayload($token)->toArray();
-
-            $user = User::with(['roles'])->find($payload['user_id']);
-
-            if (!$user) {
-                return response()->json(['message' => 'Người dùng không tồn tại'], 404);
-            }
-
-            $user->fill($req->only([
-                'username',
-                'fullname',
-                'email',
-                'address',
-            ]));
-
-            if ($req->hasFile('image')) {
-                $image = $req->file('image');
-                $imageName = $user->username . '.jpg';
-
-                $image->storeAs('public/images/user', $imageName);
-                $user->image = 'http://localhost/storage/images/user/' . $user->username . '.jpg';
-            }
-
-            $user->save();
-
-            return response()->json(['message' => 'User updated successfully', 'data' => $user], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => $e->__toString(),
-            ], 500);
-        }
-    }
-    public function grant(string $id)
-    {
-        try {
-            $user = User::find($id);
-            if ($user) {
-                $user->roles()->attach(2);
-                return response()->json(['message' => 'Admin role granted !'], 200);
-            } else
-                return response()->json(['message' => 'User not found !'], 405);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => $e->__toString(),
-            ], 500);
-        }
-    }
-    public function revoke(string $id)
-    {
-        try {
-            $user = User::find($id);
-            if ($user) {
-                $user->roles()->detach(2);
-                return response()->json(['message' => 'Role revoked successfully!'], 200);
-            } else
-                return response()->json(['message' => 'User not found !'], 404);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => $e->__toString(),
-            ], 500);
-        }
-    }
-
-    public function changePassword(Request $req)
-    {
-        try {
-            $token = JWTAuth::getToken();
-            $payload = JWTAuth::getPayload($token)->toArray();
-            $credentials = request(['oldPassword', 'newPassword']);
-            $user = User::find($payload['user_id']);
-            
-            if (!Hash::check($credentials['oldPassword'], $user->password)) {
-                return response()->json(['message' => 'Mật khẩu cũ không đúng !'], 404);
-            }
-
-            $user->password = Hash::make($credentials['newPassword']);
-            $user->save();
-            return response()->json(['message' => 'Category updated successfully', 'data' => $user], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => $e->__toString(),
-            ], 500);
-        }
-    }
-
-    public function show()
-    {
-        try {
-            $token = JWTAuth::getToken();
-            $payload = JWTAuth::getPayload($token)->toArray();
-
-            $user = User::with(['roles'])->find($payload['user_id']);
-
-            if ($user) {
-                return response()->json([
-                    'success' => true,
-                    'user' => $user,
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'user not found',
-                ]);
-            }
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => $e->__toString(),
+                'request' => $request->all()
             ], 502);
         }
     }
-    
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        try {
+            $user = $this->userRepository->find($id);
+            if (!$user)
+                return response()->json([
+                    'message' => 'User not found!'
+                ], 404);
+            return $user;
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->__toString()
+            ], 502);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        try {
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->__toString(),
+                'request' => $request->all()
+            ], 502);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        try {
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->__toString()
+            ], 502);
+        }
+    }
 }

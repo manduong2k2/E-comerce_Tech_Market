@@ -1,49 +1,46 @@
 package com.example.E_com_Product_Services.Services;
 
 import com.example.E_com_Product_Services.Entities.Product;
+import com.example.E_com_Product_Services.Generic.GenericService;
 import com.example.E_com_Product_Services.Repositories.IProductRepository;
-import com.example.E_com_Product_Services.Utils.FileUploadUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+
 
 @Service
-public class ProductService {
+public class ProductService extends GenericService<Product,Long> {
+
     @Autowired
-    private IProductRepository productRepository;
-    public List<Product> getAllProducts(){
-        return productRepository.findAll();
-    }
+    private BrandService brandService;
+    @Autowired
+    private CategoryService categoryService;
 
-    public Product getProductById(Long id){
-        Optional<Product> optional = productRepository.findById(id);
-        return optional.orElse(null);
+    public ProductService(IProductRepository productRepository) {
+        this.repository = productRepository;
     }
-
-    public List<Product> getProductsByUserId(Long user_id){
-        return productRepository.findByUserId(user_id);
-    }
-
-    public Product addProduct(MultipartFile file,Product product){
-        productRepository.save(product);
-        if(!file.isEmpty()){
-            try{
-                String fileName = String.valueOf(product.getId());
-                String uploadDir = "src/main/resources/static/img/product-photos/" ;
-                FileUploadUtil.saveFile(uploadDir,fileName,file);
-                product.setImage("img/product-photos/"+product.getId()+".jpg");
-                productRepository.save(product);
-            }
-            catch (IOException e){
-                System.out.println(e.getMessage());
-            }
+    public Product saveWithDetails(MultipartFile file, Product product, Long brand_id, Long category_id){
+        if (brand_id != null) {
+            product.setBrand(brandService.getById(brand_id));
         }
-        return product;
+        if (brand_id != null) {
+            product.setCategory(categoryService.getById(category_id));
+        }
+        return save(file, product);
+    }
+    public Product updateWithDetails(MultipartFile file, Product product,Product newProduct, Long brand_id, Long category_id){
+        product.setName(newProduct.getName());
+        product.setDescription(newProduct.getDescription());
+        product.setPrice(newProduct.getPrice());
+        product.setStock(newProduct.getStock());
+        if (brand_id != null) {
+            product.setBrand(brandService.getById(brand_id));
+        }
+        if (brand_id != null) {
+            product.setCategory(categoryService.getById(category_id));
+        }
+        return save(file, product);
     }
 }

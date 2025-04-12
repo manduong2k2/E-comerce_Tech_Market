@@ -24,6 +24,17 @@ abstract class EloquentRepository implements IEloquentRepository
         return $this->model->find($id);
     }
 
+    public function findByFilter(array $filter)
+    {
+        $query = $this->model->query();
+
+        foreach ($filter as $field => $value) {
+            $query->where($field, $value);
+        }
+
+        return $query->get();
+    }
+
     public function create(array $data)
     {
         return $this->model->create($data);

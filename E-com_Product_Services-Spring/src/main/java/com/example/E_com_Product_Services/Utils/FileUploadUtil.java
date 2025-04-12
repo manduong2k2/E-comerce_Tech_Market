@@ -12,7 +12,7 @@ public class FileUploadUtil {
 
     public static void saveFile(String uploadDir, String fileName,
                                 MultipartFile multipartFile) throws IOException {
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Path.of(uploadDir);
 
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -26,11 +26,11 @@ public class FileUploadUtil {
         }
     }
     public static void deleteFile(String fileDir)throws IOException{
-        Path uploadPath = Paths.get(fileDir);
+        Path uploadPath = Paths.get("src/main/resources/static/"+fileDir);
         try {
             Files.delete(uploadPath);
         } catch (IOException ioe) {
-            throw new IOException("Could not delete image file: " + fileDir, ioe);
+            throw new IOException("Could not delete image file: " + ioe.getMessage());
         }
     }
 }

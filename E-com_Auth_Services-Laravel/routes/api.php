@@ -22,27 +22,9 @@ Route::get('/protected', function () {
 
 //User
 
-Route::get('/users',[userController::class,'index'])->middleware(Authorize::class);
+Route::get('/users',[userController::class,'index']);
 
-Route::get('/user',[userController::class,'show']);
-
-Route::get('/user/products',[userController::class,'products']);
-
-Route::delete('/user/product/{id}',[userController::class,'destroy']);
-
-Route::post('/user/forgot/{email}',[userController::class,'sendEmail']);
-
-Route::post('/user/edit',[userController::class,'edit'])->middleware(Authenticate::class);
-
-Route::post('/signup',[userController::class,'signup']);
-
-Route::post('/user/changePassword',[userController::class,'changePassword'])->middleware(Authenticate::class);
-
-Route::post('/login',[userController::class,'login'] );
-
-Route::post('/grant/{id}',[userController::class,'grant'])->middleware(Authorize::class);
-
-Route::post('/revoke/{id}',[userController::class,'revoke'])->middleware(Authorize::class);
+Route::get('/user/{id}',[userController::class,'show']);
 
 
 

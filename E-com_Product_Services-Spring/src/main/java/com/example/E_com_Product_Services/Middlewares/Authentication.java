@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class Authentication implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("Middleware triggered: " + request.getRequestURI());
+        System.out.println("Acction triggered: " + request.getRequestURI());
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
