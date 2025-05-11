@@ -1,9 +1,9 @@
-package com.example.E_com_Product_Services.Services;
+package com.example.E_com_Brand_Services.Services;
 
-import com.example.E_com_Product_Services.Entities.Brand;
-import com.example.E_com_Product_Services.Interfaces.IBrandService;
-import com.example.E_com_Product_Services.Repositories.IBrandRepository;
-import com.example.E_com_Product_Services.Utils.FileUploadUtil;
+import com.example.E_com_Brand_Services.Entities.Brand;
+import com.example.E_com_Brand_Services.Interfaces.IBrandService;
+import com.example.E_com_Brand_Services.Repositories.IBrandRepository;
+import com.example.E_com_Brand_Services.Utils.FileUploadUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -65,9 +65,9 @@ public class BrandService implements IBrandService{
             try {
                 String fileExt = FilenameUtils.getExtension(file.getOriginalFilename());
                 String fileName = String.valueOf(brand.getId()) + '.' + fileExt;
-                String uploadDir = "src/main/resources/static/img/" + brand.getClass();
+                String uploadDir = "src/main/resources/static/img/brands";
                 FileUploadUtil.saveFile(uploadDir, fileName, file);
-                brand.setImage("img/" + brand.getClass() + "/" + brand.getId() + '.' + fileExt);
+                brand.setImage("img/brands/" + brand.getId() + '.' + fileExt);
                 repository.save(brand);
             } catch (IOException e) {
                 System.out.println(e.getMessage());
@@ -83,9 +83,9 @@ public class BrandService implements IBrandService{
             try {
                 String fileExt = FilenameUtils.getExtension(file.getOriginalFilename());
                 String fileName = String.valueOf(brand.getId()) + '.' + fileExt;
-                String uploadDir = "src/main/resources/static/img/" + brand.getClass();
+                String uploadDir = "src/main/resources/static/img/brands";
                 FileUploadUtil.saveFile(uploadDir, fileName, file);
-                brand.setImage("img/" + brand.getClass() + "/" + brand.getId() + '.' + fileExt);
+                brand.setImage("img/brands/"+ brand.getId() + '.' + fileExt);
                 repository.save(brand);
             } catch (IOException e) {
                 System.out.println(e.getMessage());

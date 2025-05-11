@@ -1,6 +1,5 @@
 package com.example.E_com_Product_Services.Entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -38,19 +37,18 @@ public class Product {
     @NotNull(message = "Stock is required")
     private Long stock;
 
+    @Column(name = "brand_id")
+    @NotNull(message = "Brand Id is required")
+    private Long brand_id;
+
+    @Column(name = "category_id")
+    @NotNull(message = "Category Id is required")
+    private Long category_id;
+
     @Column(name = "image")
     @Size(max = 200, message = "image must be less than 200 characters")
     private String image;
 
     private Long user_id;
-
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name="brand_id",referencedColumnName = "id")
-    @JsonBackReference
-    private Brand brand;
-
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name="category_id",referencedColumnName = "id" )
-    private Category category;
 
 }

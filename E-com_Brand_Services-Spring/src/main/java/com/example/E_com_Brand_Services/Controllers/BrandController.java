@@ -1,8 +1,9 @@
-package com.example.E_com_Product_Services.Controllers;
+package com.example.E_com_Brand_Services.Controllers;
 
-import com.example.E_com_Product_Services.DTOs.CategoryDTO;
-import com.example.E_com_Product_Services.Entities.Category;
-import com.example.E_com_Product_Services.Services.CategoryService;
+import com.example.E_com_Brand_Services.DTOs.BrandDTO;
+import com.example.E_com_Brand_Services.Entities.Brand;
+import com.example.E_com_Brand_Services.Interfaces.IBrandService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,19 +17,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/categories")
-public class CategoryController {
+@RequestMapping("/api/brands")
+public class BrandController {
     @Autowired
-    private CategoryService categoryService;
+    private IBrandService brandService;
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> showAllCategories(@RequestParam(required = false) Map<String, String> filters){
         try{
-            List<CategoryDTO> filterdCategories ;
-            if(filters == null) filterdCategories = categoryService.getAll().stream().map(CategoryDTO::fromCategory).collect(Collectors.toList());
-            filterdCategories = categoryService.getFiltered(filters).stream().map(CategoryDTO::fromCategory).collect(Collectors.toList());
+            List<BrandDTO> filterdBrands ;
+            if(filters.isEmpty()) filterdBrands = brandService.getAll().stream().map(BrandDTO::new).collect(Collectors.toList());
+            filterdBrands = brandService.getFiltered(filters).stream().map(BrandDTO::new).collect(Collectors.toList());
             Map<String, Object> response = new HashMap<>();
-            response.put("categories", filterdCategories);
+            response.put("brands", filterdBrands);
             return ResponseEntity.ok(response);
         }catch (Exception e){
             Map<String, Object> response = new HashMap<>();
@@ -40,84 +41,82 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getBrandById(@PathVariable Long id) {
         try {
-            Category category = categoryService.getById(id);
-            if (category == null) {
+            Brand brand = brandService.getById(id);
+            if (brand == null) {
                 Map<String, Object> response = new HashMap<>();
-                response.put("message", "Category not found");
+                response.put("message", "Brand not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Category retrieved successfully");
-            response.put("product", CategoryDTO.fromCategory(category));
+            response.put("message", "Brand retrieved successfully");
+            response.put("product",new BrandDTO(brand));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Failed to retrieve category");
+            response.put("message", "Failed to retrieve brand");
             response.put("Error", e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String,Object>> addCategory(
-            @ModelAttribute Category category , 
-            @RequestPart(name = "file",required = false) MultipartFile file
-        ){
+    public ResponseEntity<Map<String,Object>> addBrand(@ModelAttribute Brand brand , @RequestPart(name = "file" , required = false) MultipartFile file){
         try{
-            Category savedCategory = categoryService.save(file,category);
+            Brand savedBrand = brandService.save(file,brand);
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Category added successfully");
-            response.put("category", CategoryDTO.fromCategory(savedCategory));
+            response.put("message", "Brand added successfully");
+            response.put("brand", new BrandDTO(savedBrand));
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Category added failed");
-            response.put("Error: ", e);
+            response.put("message", "Brand added failed");
+            response.put("Error: ", e.getMessage());
             return ResponseEntity.ok(response);
         }
     }
+
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> updateProduct(
             @PathVariable Long id,
-            @ModelAttribute Category category,
+            @RequestBody Brand brand,
             @RequestPart(name = "file", required = false) MultipartFile file) {
         try {
-            Category existingCategory = categoryService.getById(id);
-            if (existingCategory == null) {
+            Brand existingBrand = brandService.getById(id);
+            if (existingBrand == null) {
                 Map<String, Object> response = new HashMap<>();
-                response.put("message", "Category not found");
+                response.put("message", "Brand not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            Category updatedCategory = categoryService.update(file,existingCategory,category);
+            Brand updatedBrand = brandService.update(file,existingBrand,brand);
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Category updated successfully");
-            response.put("category", CategoryDTO.fromCategory(updatedCategory));
+            response.put("message", "Brand updated successfully");
+            response.put("brand", new BrandDTO(updatedBrand));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Category update failed");
+            response.put("message", "Brand update failed");
             response.put("Error", e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> DeleteCategoryById(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> DeleteBrandById(@PathVariable Long id) {
         try {
-            Category category = categoryService.getById(id);
-            if (category == null) {
+            Brand brand = brandService.getById(id);
+            if (brand == null) {
                 Map<String, Object> response = new HashMap<>();
-                response.put("message", "Category not found");
+                response.put("message", "Brand not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            boolean deleteStatus = categoryService.delete(category);
+            Boolean deleteStatus = brandService.delete(brand);
             Map<String, Object> response = new HashMap<>();
-            response.put("Delete success", deleteStatus);
+            response.put("message", deleteStatus);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Failed to delete category");
+            response.put("message", "Failed to delete brand");
             response.put("Error", e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }

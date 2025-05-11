@@ -1,8 +1,6 @@
 package com.example.E_com_Product_Services.Services;
 
 import com.example.E_com_Product_Services.Entities.Product;
-import com.example.E_com_Product_Services.Interfaces.IBrandService;
-import com.example.E_com_Product_Services.Interfaces.ICategoryService;
 import com.example.E_com_Product_Services.Interfaces.IProductService;
 import com.example.E_com_Product_Services.Repositories.IProductRepository;
 import com.example.E_com_Product_Services.Utils.FileUploadUtil;
@@ -25,16 +23,6 @@ public class ProductService implements IProductService {
 
     @Autowired
     private IProductRepository repository;
-    @Autowired
-    private IBrandService brandService;
-    @Autowired
-    private ICategoryService categoryService;
-
-    public ProductService(IProductRepository productRepository,IBrandService brandService,ICategoryService categoryService) {
-        this.repository = productRepository;
-        this.brandService =brandService;
-        this.categoryService = categoryService;
-    }
 
     @Override
     public List<Product> getAll(){
@@ -84,13 +72,7 @@ public class ProductService implements IProductService {
         return product.isEmpty() ? null : product.get();
     }
     @Override
-    public Product save(MultipartFile file, Product product, Long brand_id, Long category_id){
-        if (brand_id != null) {
-            product.setBrand(brandService.getById(brand_id));
-        }
-        if (brand_id != null) {
-            product.setCategory(categoryService.getById(category_id));
-        }
+    public Product save(MultipartFile file, Product product){
         repository.save(product);
         if (file != null && !file.isEmpty()) {
             try {
@@ -107,17 +89,11 @@ public class ProductService implements IProductService {
         return product;
     }
     @Override
-    public Product update(MultipartFile file, Product product,Product newProduct, Long brand_id, Long category_id){
+    public Product update(MultipartFile file, Product product,Product newProduct){
         product.setName(newProduct.getName());
         product.setDescription(newProduct.getDescription());
         product.setPrice(newProduct.getPrice());
         product.setStock(newProduct.getStock());
-        if (brand_id != null) {
-            product.setBrand(brandService.getById(brand_id));
-        }
-        if (brand_id != null) {
-            product.setCategory(categoryService.getById(category_id));
-        }
         if (file != null && !file.isEmpty()) {
             try {
                 String fileExt = FilenameUtils.getExtension(file.getOriginalFilename());

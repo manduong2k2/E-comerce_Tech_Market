@@ -1,4 +1,4 @@
-package com.example.E_com_Product_Services.Entities;
+package com.example.E_com_Category_Services.Entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

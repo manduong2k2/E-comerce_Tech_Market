@@ -1,11 +1,11 @@
-package com.example.E_com_Product_Services.Interfaces;
+package com.example.E_com_Category_Services.Interfaces;
 
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.E_com_Product_Services.Entities.Category;
+import com.example.E_com_Category_Services.Entities.Category;
 
 public interface ICategoryService {
     public List<Category> getAll();

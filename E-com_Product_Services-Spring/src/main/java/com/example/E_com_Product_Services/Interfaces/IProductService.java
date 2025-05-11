@@ -11,7 +11,7 @@ public interface IProductService {
     public List<Product> getAll();
     public List<Product> getFiltered(Map<String, String> filters);
     public Product getById(Long id);
-    public Product save(MultipartFile file, Product product, Long brand_id, Long category_id);
-    public Product update(MultipartFile file, Product product,Product newProduct, Long brand_id, Long category_id);
+    public Product save(MultipartFile file, Product product);
+    public Product update(MultipartFile file, Product product,Product newProduct);
     public boolean delete(Product product);
 }

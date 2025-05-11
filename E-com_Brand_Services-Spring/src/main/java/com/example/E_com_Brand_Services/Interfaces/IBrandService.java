@@ -1,11 +1,11 @@
-package com.example.E_com_Product_Services.Interfaces;
+package com.example.E_com_Brand_Services.Interfaces;
 
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.E_com_Product_Services.Entities.Brand;
+import com.example.E_com_Brand_Services.Entities.Brand;
 
 public interface IBrandService {
     public List<Brand> getAll();

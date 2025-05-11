@@ -1,8 +1,5 @@
-package com.example.E_com_Product_Services.Controllers;
+package com.example.E_com_Category_Services.Controllers;
 
-import com.example.E_com_Product_Services.DTOs.BrandDTO;
-import com.example.E_com_Product_Services.Entities.Brand;
-import com.example.E_com_Product_Services.Services.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,25 +7,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.E_com_Category_Services.DTOs.CategoryDTO;
+import com.example.E_com_Category_Services.Entities.Category;
+import com.example.E_com_Category_Services.Interfaces.ICategoryService;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/brands")
-public class BrandController {
+@RequestMapping("/api/categories")
+public class CategoryController {
     @Autowired
-    private BrandService brandService;
+    private ICategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> showAllCategories(@RequestParam(required = false) Map<String, String> filters){
         try{
-            List<BrandDTO> filterdBrands ;
-            if(filters.isEmpty()) filterdBrands = brandService.getAll().stream().map(BrandDTO::fromBrand).collect(Collectors.toList());
-            filterdBrands = brandService.getFiltered(filters).stream().map(BrandDTO::fromBrand).collect(Collectors.toList());
+            List<CategoryDTO> filterdCategories ;
+            if(filters == null) filterdCategories = categoryService.getAll().stream().map(CategoryDTO::fromCategory).collect(Collectors.toList());
+            filterdCategories = categoryService.getFiltered(filters).stream().map(CategoryDTO::fromCategory).collect(Collectors.toList());
             Map<String, Object> response = new HashMap<>();
-            response.put("brands", filterdBrands);
+            response.put("categories", filterdCategories);
             return ResponseEntity.ok(response);
         }catch (Exception e){
             Map<String, Object> response = new HashMap<>();
@@ -40,82 +41,84 @@ public class BrandController {
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getBrandById(@PathVariable Long id) {
         try {
-            Brand brand = brandService.getById(id);
-            if (brand == null) {
+            Category category = categoryService.getById(id);
+            if (category == null) {
                 Map<String, Object> response = new HashMap<>();
-                response.put("message", "Brand not found");
+                response.put("message", "Category not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Brand retrieved successfully");
-            response.put("product", BrandDTO.fromBrand(brand));
+            response.put("message", "Category retrieved successfully");
+            response.put("product", CategoryDTO.fromCategory(category));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Failed to retrieve brand");
+            response.put("message", "Failed to retrieve category");
             response.put("Error", e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String,Object>> addBrand(@ModelAttribute Brand brand , @RequestPart(name = "file" , required = false) MultipartFile file){
+    public ResponseEntity<Map<String,Object>> addCategory(
+            @ModelAttribute Category category , 
+            @RequestPart(name = "file",required = false) MultipartFile file
+        ){
         try{
-            Brand savedBrand = brandService.save(file,brand);
+            Category savedCategory = categoryService.save(file,category);
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Brand added successfully");
-            response.put("brand", BrandDTO.fromBrand(savedBrand));
+            response.put("message", "Category added successfully");
+            response.put("category", CategoryDTO.fromCategory(savedCategory));
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Brand added failed");
-            response.put("Error: ", e.getMessage());
+            response.put("message", "Category added failed");
+            response.put("Error: ", e);
             return ResponseEntity.ok(response);
         }
     }
-
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> updateProduct(
             @PathVariable Long id,
-            @ModelAttribute Brand brand,
+            @ModelAttribute Category category,
             @RequestPart(name = "file", required = false) MultipartFile file) {
         try {
-            Brand existingBrand = brandService.getById(id);
-            if (existingBrand == null) {
+            Category existingCategory = categoryService.getById(id);
+            if (existingCategory == null) {
                 Map<String, Object> response = new HashMap<>();
-                response.put("message", "Brand not found");
+                response.put("message", "Category not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            Brand updatedBrand = brandService.update(file,existingBrand,brand);
+            Category updatedCategory = categoryService.update(file,existingCategory,category);
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Brand updated successfully");
-            response.put("brand", BrandDTO.fromBrand(updatedBrand));
+            response.put("message", "Category updated successfully");
+            response.put("category", CategoryDTO.fromCategory(updatedCategory));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Brand update failed");
+            response.put("message", "Category update failed");
             response.put("Error", e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> DeleteBrandById(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> DeleteCategoryById(@PathVariable Long id) {
         try {
-            Brand brand = brandService.getById(id);
-            if (brand == null) {
+            Category category = categoryService.getById(id);
+            if (category == null) {
                 Map<String, Object> response = new HashMap<>();
-                response.put("message", "Brand not found");
+                response.put("message", "Category not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            Boolean deleteStatus = brandService.delete(brand);
+            boolean deleteStatus = categoryService.delete(category);
             Map<String, Object> response = new HashMap<>();
-            response.put("message", deleteStatus);
+            response.put("Delete success", deleteStatus);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Failed to delete brand");
+            response.put("message", "Failed to delete category");
             response.put("Error", e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }

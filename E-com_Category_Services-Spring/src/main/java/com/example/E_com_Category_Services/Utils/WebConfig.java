@@ -1,12 +1,11 @@
-package com.example.E_com_Product_Services.Utils;
+package com.example.E_com_Category_Services.Utils;
 
-import com.example.E_com_Product_Services.Middlewares.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.example.E_com_Category_Services.Middlewares.Authentication;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -18,10 +17,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(myMiddleware)
                 .addPathPatterns("/products/**"); //
-    }
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
     }
 }
 

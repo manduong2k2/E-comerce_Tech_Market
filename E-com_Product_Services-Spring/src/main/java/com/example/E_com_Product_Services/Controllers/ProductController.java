@@ -21,16 +21,12 @@ public class ProductController {
     @Autowired
     private IProductService productService;
 
-    public ProductController(IProductService productService){
-        this.productService = productService;
-    }
-
     @GetMapping
     public ResponseEntity<Map<String, Object>> showAllProducts(@RequestParam(required = false) Map<String, String> filters) {
         try{
             List<ProductDTO> filteredProducts;
-            if(filters.isEmpty()) filteredProducts = productService.getAll().stream().map(ProductDTO::fromProduct).collect(Collectors.toList());
-            filteredProducts = productService.getFiltered(filters).stream().map(ProductDTO::fromProduct).collect(Collectors.toList());
+            if(filters.isEmpty()) filteredProducts = productService.getAll().stream().map(ProductDTO::new).collect(Collectors.toList());
+            filteredProducts = productService.getFiltered(filters).stream().map(ProductDTO::new).collect(Collectors.toList());
             Map<String, Object> response = new HashMap<>();
             response.put("products", filteredProducts);
             return ResponseEntity.ok(response);
@@ -52,7 +48,7 @@ public class ProductController {
             }
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Product retrieved successfully");
-            response.put("product", ProductDTO.fromProduct(product));
+            response.put("product", new ProductDTO(product));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
@@ -69,10 +65,10 @@ public class ProductController {
             @RequestParam(required = false) Long brand_id,
             @RequestParam(required = false) Long category_id) {
         try {
-            Product savedProduct = productService.save(file, product,brand_id,category_id);
+            Product savedProduct = productService.save(file, product);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Product added successfully");
-            response.put("product", ProductDTO.fromProduct(savedProduct));
+            response.put("product", new ProductDTO(savedProduct));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
@@ -96,10 +92,10 @@ public class ProductController {
                 response.put("message", "Product not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            Product updatedProduct = productService.update(file, existingProduct,product,brand_id,category_id);
+            Product updatedProduct = productService.update(file, existingProduct,product);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Product updated successfully");
-            response.put("product", ProductDTO.fromProduct(updatedProduct));
+            response.put("product", new ProductDTO(updatedProduct));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();

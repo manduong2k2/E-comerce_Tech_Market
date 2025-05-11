@@ -1,9 +1,4 @@
-package com.example.E_com_Product_Services.Services;
-
-import com.example.E_com_Product_Services.Entities.Category;
-import com.example.E_com_Product_Services.Interfaces.ICategoryService;
-import com.example.E_com_Product_Services.Repositories.ICategoryRepository;
-import com.example.E_com_Product_Services.Utils.FileUploadUtil;
+package com.example.E_com_Category_Services.Services;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +10,11 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.E_com_Category_Services.Entities.Category;
+import com.example.E_com_Category_Services.Interfaces.ICategoryService;
+import com.example.E_com_Category_Services.Repositories.ICategoryRepository;
+import com.example.E_com_Category_Services.Utils.FileUploadUtil;
 
 @Service
 public class CategoryService implements ICategoryService {
