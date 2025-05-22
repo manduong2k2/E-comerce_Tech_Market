@@ -74,7 +74,8 @@ public class CategoryService implements ICategoryService {
     }
     @Override
     public Category update(MultipartFile file, Category category, Category newCategory) {
-        category.setName(newCategory.getName());
+        if(newCategory.getName() != null) category.setName(newCategory.getName());
+        if(newCategory.getDescription() != null) category.setDescription(newCategory.getDescription());
         if (file != null && !file.isEmpty()) {
             try {
                 String fileExt = FilenameUtils.getExtension(file.getOriginalFilename());

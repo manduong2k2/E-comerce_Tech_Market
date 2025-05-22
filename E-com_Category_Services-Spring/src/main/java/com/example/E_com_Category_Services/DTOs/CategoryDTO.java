@@ -1,7 +1,6 @@
 package com.example.E_com_Category_Services.DTOs;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.example.E_com_Category_Services.Entities.Category;
 import com.example.E_com_Category_Services.Entities.Product;
@@ -17,22 +16,13 @@ public class CategoryDTO {
     private Long id;
     private String name;
     private String image;
+    private String description;
     private List<Product> products ;
     
-    public static CategoryDTO fromCategory(Category category){
-        return new CategoryDTO(
-            category.getId(),
-            category.getName(),
-            category.getImage(),
-            category.getProducts().stream().map(product -> new Product(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getStock(),
-                product.getImage(),
-                null
-            )).collect(Collectors.toList())
-        );
+    public CategoryDTO(Category category){
+        this.id = category.getId();
+        this.name = category.getName();
+        this.image = category.getImage();
+        this.description = category.getDescription();
     }
 }

@@ -32,6 +32,13 @@ public class Category {
     @Size(max = 200, message = "Image must be less than 200 characters")
     private String image;
 
+    @Lob
+    @Column(name = "description")
+    @NotEmpty(message = "Description must not be empty")
+    @Nationalized
+    private String description;
+
+    @Transient
     private List<Product> products = new ArrayList<>();
 
 }

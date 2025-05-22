@@ -77,8 +77,8 @@ public class BrandService implements IBrandService{
     }
     @Override
     public Brand update(MultipartFile file, Brand brand, Brand newBrand) {
-        brand.setName(newBrand.getName());
-        brand.setDescription(newBrand.getDescription());
+        if(newBrand.getName() != null) brand.setName(newBrand.getName());
+        if(newBrand.getDescription() != null) brand.setDescription(newBrand.getDescription());
         if (file != null && !file.isEmpty()) {
             try {
                 String fileExt = FilenameUtils.getExtension(file.getOriginalFilename());

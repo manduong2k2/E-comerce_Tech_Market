@@ -40,7 +40,7 @@ public class ProductService implements IProductService {
                         if (!p.getName().toLowerCase().contains(value.toLowerCase())) return false;
                         break;
                     case "description":
-                        if (!p.getDescription().contains(value.toLowerCase())) return false;
+                        if (!p.getDescription().toLowerCase().contains(value.toLowerCase())) return false;
                         break;
                         case "priceMin":
                         try {
@@ -90,10 +90,12 @@ public class ProductService implements IProductService {
     }
     @Override
     public Product update(MultipartFile file, Product product,Product newProduct){
-        product.setName(newProduct.getName());
-        product.setDescription(newProduct.getDescription());
-        product.setPrice(newProduct.getPrice());
-        product.setStock(newProduct.getStock());
+        if(newProduct.getName() !=null) product.setName(newProduct.getName());
+        if(newProduct.getDescription() !=null) product.setDescription(newProduct.getDescription());
+        if(newProduct.getPrice() !=null) product.setPrice(newProduct.getPrice());
+        if(newProduct.getStock() !=null) product.setStock(newProduct.getStock());
+        if(newProduct.getBrand_id() !=null) product.setBrand_id(newProduct.getBrand_id());
+        if(newProduct.getCategory_id() !=null) product.setCategory_id(newProduct.getCategory_id());
         if (file != null && !file.isEmpty()) {
             try {
                 String fileExt = FilenameUtils.getExtension(file.getOriginalFilename());

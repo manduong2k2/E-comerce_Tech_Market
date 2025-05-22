@@ -78,9 +78,9 @@ public class BrandController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Object>> updateProduct(
+    public ResponseEntity<Map<String, Object>> updateBrand(
             @PathVariable Long id,
-            @RequestBody Brand brand,
+            @ModelAttribute Brand brand,
             @RequestPart(name = "file", required = false) MultipartFile file) {
         try {
             Brand existingBrand = brandService.getById(id);

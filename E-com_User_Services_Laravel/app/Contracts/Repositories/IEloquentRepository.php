@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Contracts\Repositories;
+
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\UploadedFile;
+
+interface IEloquentRepository
+{
+    public function getAll();
+
+    public function getById($id);
+
+    public function store(array $data);
+
+    public function update($model, array $data);
+
+    public function delete($model);
+}

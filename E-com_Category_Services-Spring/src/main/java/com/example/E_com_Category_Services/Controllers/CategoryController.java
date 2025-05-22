@@ -26,8 +26,8 @@ public class CategoryController {
     public ResponseEntity<Map<String, Object>> showAllCategories(@RequestParam(required = false) Map<String, String> filters){
         try{
             List<CategoryDTO> filterdCategories ;
-            if(filters == null) filterdCategories = categoryService.getAll().stream().map(CategoryDTO::fromCategory).collect(Collectors.toList());
-            filterdCategories = categoryService.getFiltered(filters).stream().map(CategoryDTO::fromCategory).collect(Collectors.toList());
+            if(filters == null) filterdCategories = categoryService.getAll().stream().map(CategoryDTO::new).collect(Collectors.toList());
+            filterdCategories = categoryService.getFiltered(filters).stream().map(CategoryDTO::new).collect(Collectors.toList());
             Map<String, Object> response = new HashMap<>();
             response.put("categories", filterdCategories);
             return ResponseEntity.ok(response);
@@ -50,7 +50,7 @@ public class CategoryController {
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Category retrieved successfully");
-            response.put("product", CategoryDTO.fromCategory(category));
+            response.put("product",new CategoryDTO(category));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
@@ -69,7 +69,7 @@ public class CategoryController {
             Category savedCategory = categoryService.save(file,category);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Category added successfully");
-            response.put("category", CategoryDTO.fromCategory(savedCategory));
+            response.put("category", new CategoryDTO(savedCategory));
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -94,7 +94,7 @@ public class CategoryController {
             Category updatedCategory = categoryService.update(file,existingCategory,category);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Category updated successfully");
-            response.put("category", CategoryDTO.fromCategory(updatedCategory));
+            response.put("category", new CategoryDTO(updatedCategory));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();

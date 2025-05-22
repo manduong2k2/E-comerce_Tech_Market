@@ -61,9 +61,7 @@ public class ProductController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> addProduct(
             @ModelAttribute Product product,
-            @RequestPart(name = "file", required = false) MultipartFile file,
-            @RequestParam(required = false) Long brand_id,
-            @RequestParam(required = false) Long category_id) {
+            @RequestPart(name = "file", required = false) MultipartFile file) {
         try {
             Product savedProduct = productService.save(file, product);
             Map<String, Object> response = new HashMap<>();
