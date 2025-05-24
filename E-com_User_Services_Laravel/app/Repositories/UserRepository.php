@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Contracts\Repositories\IUserRepository;
-use App\Models\Category;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,9 +12,16 @@ class UserRepository extends EloquentRepository implements IUserRepository
     {
         return User::class;
     }
+    public function getTransactions(): array
+    {
+        return ['roles'];
+    }
     public function store(array $data)
     {
         $data['password'] = Hash::make($data['password']);
-        parent::store($data);
+        $user = parent::store($data);
+        $user->roles()->attach(1);
+        activity()->log('user ' . $user['name'] . ' granted role user');
+        return $user;
     }
 }

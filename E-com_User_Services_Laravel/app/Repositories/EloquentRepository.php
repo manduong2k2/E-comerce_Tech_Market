@@ -8,10 +8,12 @@ abstract class EloquentRepository implements IEloquentRepository
 {
 
     protected $_model;
+    protected $transactions = [];
 
     public function __construct()
     {
         $this->setModel();
+        $this->setTransactions();
     }
 
     private function setModel()
@@ -21,16 +23,22 @@ abstract class EloquentRepository implements IEloquentRepository
         );
     }
 
+    private function setTransactions()
+    {
+        $this->transactions = $this->getTransactions();
+    }
+
     abstract public function getModel(): string;
+    abstract public function getTransactions(): array;
 
     public function getAll()
     {
-        return $this->_model->all();
+        return $this->_model::with($this->transactions)->get();
     }
 
     public function getById($id)
     {
-        return $this->_model->findOrFail($id);
+        return $this->_model->find($id);
     }
 
     public function store(array $data)

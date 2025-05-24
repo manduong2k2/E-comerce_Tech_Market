@@ -3,29 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repositories\IUserRepository;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
 {
     public function __construct(
-        public IUserRepository $userRepository
-    ) {
-    }
+        public IUserRepository $repository
+    ) {}
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return $this->userRepository->getAll();
+        return $this->repository->getAll();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        return $this->userRepository->store($request->all());
+        $user = $this->repository->store($request->validated());
+        return response()->json([
+            'message' => 'User created successfully',
+            'data' => $user,
+        ], 201);
     }
 
     /**
@@ -33,17 +35,25 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return $this->userRepository->getById($id);
+        $model = $this->repository->getById($id);
+        if (!$model) 
+        return response()->json([
+            'message' => 'User not found',
+        ], 404);
+        return $model;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        $model = $this->userRepository->getById($id);
-        if(!$model) abort(404);
-        return $this->userRepository->update($model,$request->all());
+        $model = $this->repository->getById($id);
+        if (!$model) 
+        return response()->json([
+            'message' => 'User not found',
+        ], 404);
+        return $this->repository->update($model, $request->all());
     }
 
     /**
@@ -51,8 +61,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $model = $this->userRepository->getById($id);
-        if(!$model) abort(404);
-        return $this->userRepository->delete($model);
+        $model = $this->repository->getById($id);
+        if (!$model)
+        return response()->json([
+            'message' => 'User not found',
+        ], 404);
+        return $this->repository->delete($model);
     }
 }

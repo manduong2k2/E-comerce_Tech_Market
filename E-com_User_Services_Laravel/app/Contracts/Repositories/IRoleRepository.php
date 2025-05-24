@@ -2,7 +2,7 @@
 
 namespace App\Contracts\Repositories;
 
-interface IUserRepository extends IEloquentRepository
+interface IRoleRepository extends IEloquentRepository
 {
     
 }
