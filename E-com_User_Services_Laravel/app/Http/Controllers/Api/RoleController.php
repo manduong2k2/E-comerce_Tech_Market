@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Contracts\Repositories\IRoleRepository;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleRequest;
 
 class RoleController extends Controller
@@ -14,9 +15,9 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(RoleRequest $request)
     {
-        return $this->repository->getAll();
+        return $this->repository->getByFilter($request->only('name','description'));
     }
 
     /**

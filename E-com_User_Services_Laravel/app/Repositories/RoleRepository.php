@@ -12,7 +12,7 @@ class RoleRepository extends EloquentRepository implements IRoleRepository
     {
         return Role::class;
     }
-    public function getTransactions(): array
+    public function getRelationships(): array
     {
         return ['users'];
     }

@@ -8,6 +8,8 @@ interface IEloquentRepository
 
     public function getById($id);
 
+    public function getByFilter($filters);
+
     public function store(array $data);
 
     public function update($model, array $data);

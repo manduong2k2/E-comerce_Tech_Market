@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class RoleRequest extends FormRequest
+class RoleRequest extends FormRequest implements IModelRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,20 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'description' => 'required|string'
+            'name' => 'string',
+            'description' => 'string'
         ];
+        $rules = [
+            'name' => 'string',
+            'description' => 'string'
+        ];
+
+        if ($this->isMethod('POST') || $this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            $rules['name'] = 'required';
+            $rules['description'] = 'required';
+        }
+
+        return $rules;
     }
     public function messages(): array
     {
@@ -34,11 +45,17 @@ class RoleRequest extends FormRequest
             'name.required' => 'The name field is required.',
             'name.string' => 'The name must be a string.',
 
-            'description.required' => 'The email field is required.',
-            'description.string' => 'The email must be a string.',
+            'description.required' => 'The description field is required.',
+            'description.string' => 'The description must be a string.',
         ];
     }
-    protected function failedValidation(Validator $validator)
+
+    public function validated($key = null, $default = null): array
+    {
+        return parent::validated(); 
+    }
+
+    public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'message' => 'Validation failed',

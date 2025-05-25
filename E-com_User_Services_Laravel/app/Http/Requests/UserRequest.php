@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UserRequest extends FormRequest
+class UserRequest extends FormRequest implements IModelRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,19 +26,21 @@ class UserRequest extends FormRequest
         $user_id = $this->route()->parameter('user');
         $rules = [
             'name' => 'string',
-            'phone' => 'numeric',
-            'email' => 'string|email|max:255|unique:users,email,' . $user_id,
-            'phone' => 'unique:users,phone,' . $user_id
+            'email' => 'string|email|max:255',
+            'phone' => 'numeric|max:10'
         ];
 
         if ($this->isMethod('POST')) {
             $rules['password'] = 'required|string|min:8';
             $rules['name'] = 'required';
-            $rules['email'] = 'required';
-            $rules['phone'] = 'required';
+            $rules['email'] = 'required|unique:users';
+            $rules['phone'] = 'required|unique:users';
         }
 
-        //if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {}
+        if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            $rules['email'] = 'unique:users,email,' . $user_id;
+            $rules['phone'] = 'unique:users,phone,' . $user_id;
+        }
 
         return $rules;
     }
@@ -63,7 +65,13 @@ class UserRequest extends FormRequest
             'password.min' => 'The password must be at least 8 characters.',
         ];
     }
-    protected function failedValidation(Validator $validator)
+
+    public function validated($key = null, $default = null): array
+    {
+        return parent::validated(); 
+    }
+
+    public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'message' => 'Validation failed',

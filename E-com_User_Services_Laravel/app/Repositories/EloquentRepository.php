@@ -8,12 +8,12 @@ abstract class EloquentRepository implements IEloquentRepository
 {
 
     protected $_model;
-    protected $transactions = [];
+    protected $relationships = [];
 
     public function __construct()
     {
         $this->setModel();
-        $this->setTransactions();
+        $this->setRelationships();
     }
 
     private function setModel()
@@ -23,22 +23,33 @@ abstract class EloquentRepository implements IEloquentRepository
         );
     }
 
-    private function setTransactions()
+    private function setRelationships()
     {
-        $this->transactions = $this->getTransactions();
+        $this->relationships = $this->getRelationships();
     }
 
     abstract public function getModel(): string;
-    abstract public function getTransactions(): array;
+    abstract public function getRelationships(): array;
 
     public function getAll()
     {
-        return $this->_model::with($this->transactions)->get();
+        return $this->_model::with($this->relationships)->get();
     }
 
     public function getById($id)
     {
         return $this->_model->find($id);
+    }
+
+    public function getByFilter($filters)
+    {
+        $query = $this->_model::with($this->relationships);
+        foreach ($filters as $column => $value) {
+            if (!is_null($value)) {
+                $query->where($column, 'LIKE', '%' . $value . '%');
+            }
+        }
+        return $query->get();
     }
 
     public function store(array $data)

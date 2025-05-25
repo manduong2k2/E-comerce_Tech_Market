@@ -12,7 +12,7 @@ class UserRepository extends EloquentRepository implements IUserRepository
     {
         return User::class;
     }
-    public function getTransactions(): array
+    public function getRelationships(): array
     {
         return ['roles'];
     }
@@ -23,5 +23,8 @@ class UserRepository extends EloquentRepository implements IUserRepository
         $user->roles()->attach(1);
         activity()->log('user ' . $user['name'] . ' granted role user');
         return $user;
+    }
+    public function auth(array $data){
+
     }
 }
