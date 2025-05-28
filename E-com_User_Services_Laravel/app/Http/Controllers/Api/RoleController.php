@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Contracts\Repositories\IRoleRepository;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RoleRequest;
+use App\Http\Requests\Role\RoleRequest;
 
 class RoleController extends Controller
 {

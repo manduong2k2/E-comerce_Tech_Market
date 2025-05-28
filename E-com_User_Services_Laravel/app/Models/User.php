@@ -8,8 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -27,9 +28,22 @@ class User extends Authenticatable
         'phone'
     ];
 
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [
+            'id' => $this->id,
+        ];
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logOnly(['name', 'email']);
+        return LogOptions::defaults()
+        ->logOnly(['name', 'email','phone']);
     }
 
     /**

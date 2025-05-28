@@ -15,5 +15,4 @@ interface IModelRequest
     public function rules();
     public function messages();
     public function failedValidation(Validator $validator);
-    public function validated($key = null, $default = null);
 }

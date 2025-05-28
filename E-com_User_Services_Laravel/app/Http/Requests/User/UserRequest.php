@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
+use App\Http\Requests\IModelRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -64,11 +65,6 @@ class UserRequest extends FormRequest implements IModelRequest
             'password.string' => 'The password must be a string.',
             'password.min' => 'The password must be at least 8 characters.',
         ];
-    }
-
-    public function validated($key = null, $default = null): array
-    {
-        return parent::validated(); 
     }
 
     public function failedValidation(Validator $validator)

@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Contracts\Repositories\IUserRepository;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\User\LoginRequest;
+use App\Http\Requests\User\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -33,6 +34,11 @@ class UserController extends Controller
         ], 201);
     }
 
+    public function login(LoginRequest $request)
+    {
+        return $this->repository->auth($request->only(['email','password']));
+    }
+
     /**
      * Display the specified resource.
      */
@@ -56,7 +62,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'User not found',
         ], 404);
-        return $this->repository->update($model, $request->all());
+        return $this->repository->update($model, $request->only(['email','name','phone']));
     }
 
     /**

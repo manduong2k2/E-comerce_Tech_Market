@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Contracts\Repositories\IUserRepository;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserRepository extends EloquentRepository implements IUserRepository
 {
@@ -26,5 +27,10 @@ class UserRepository extends EloquentRepository implements IUserRepository
     }
     public function auth(array $data){
 
+        if (! $token = Auth::attempt($data)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        }
+
+        return response()->json(['token' => $token], 200);
     }
 }

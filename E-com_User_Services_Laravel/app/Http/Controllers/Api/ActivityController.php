@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Contracts\Repositories\IActivityRepository;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\LogCollection;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
@@ -17,7 +18,7 @@ class ActivityController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->repository->getByFilter($request->only(['name','description','event']));
+        return new LogCollection($this->repository->getByFilter($request->only(['name','description','event'])));
     }
 
     /**
@@ -25,7 +26,7 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return $request->all();
     }
 
     /**

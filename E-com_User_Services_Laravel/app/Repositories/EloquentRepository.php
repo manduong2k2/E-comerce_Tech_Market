@@ -38,7 +38,7 @@ abstract class EloquentRepository implements IEloquentRepository
 
     public function getById($id)
     {
-        return $this->_model->find($id);
+        return $this->_model::with($this->relationships)->find($id);
     }
 
     public function getByFilter($filters)
