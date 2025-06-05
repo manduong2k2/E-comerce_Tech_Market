@@ -1,8 +1,13 @@
 package com.example.E_com_Product_Services.Controllers;
 
 import com.example.E_com_Product_Services.DTOs.ProductDTO;
+import com.example.E_com_Product_Services.Entities.Brand;
+import com.example.E_com_Product_Services.Entities.Category;
 import com.example.E_com_Product_Services.Entities.Product;
 import com.example.E_com_Product_Services.Interfaces.IProductService;
+import com.example.E_com_Product_Services.Services.ApiService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +26,9 @@ public class ProductController {
     @Autowired
     private IProductService productService;
 
+    @Autowired
+    private ApiService apiService;
+
     @GetMapping
     public ResponseEntity<Map<String, Object>> showAllProducts(@RequestParam(required = false) Map<String, String> filters) {
         try{
@@ -35,10 +43,10 @@ public class ProductController {
             response.put("message", e.getMessage());
             return ResponseEntity.ok(response);
         }
-    }
+    } //
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getProductById(@PathVariable Long id) {
+    public ResponseEntity<?> getProductById(@PathVariable Long id) {
         try {
             Product product = productService.getById(id);
             if (product == null) {
@@ -46,10 +54,7 @@ public class ProductController {
                 response.put("message", "Product not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Product retrieved successfully");
-            response.put("product", new ProductDTO(product));
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(new ProductDTO(product));
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Failed to retrieve product");
@@ -59,11 +64,13 @@ public class ProductController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Object>> addProduct(
+    public ResponseEntity<?> addProduct(
             @ModelAttribute Product product,
             @RequestPart(name = "file", required = false) MultipartFile file) {
         try {
             Product savedProduct = productService.save(file, product);
+            savedProduct.setBrand(new ObjectMapper().readValue(apiService.getData("8081","api", "brands/"+savedProduct.getBrand_id()), Brand.class));
+            savedProduct.setCategory(new ObjectMapper().readValue(apiService.getData("8082","api", "categories/"+savedProduct.getCategory_id()), Category.class));
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Product added successfully");
             response.put("product", new ProductDTO(savedProduct));

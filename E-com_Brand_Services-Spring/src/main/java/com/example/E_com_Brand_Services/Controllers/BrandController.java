@@ -39,7 +39,7 @@ public class BrandController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getBrandById(@PathVariable Long id) {
+    public ResponseEntity<?> getBrandById(@PathVariable Long id) {
         try {
             Brand brand = brandService.getById(id);
             if (brand == null) {
@@ -47,11 +47,7 @@ public class BrandController {
                 response.put("message", "Brand not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Brand retrieved successfully");
-            response.put("product",new BrandDTO(brand));
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(new BrandDTO(brand));
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Failed to retrieve brand");

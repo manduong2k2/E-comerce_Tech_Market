@@ -11,4 +11,4 @@ Route::get('/user', function (Request $request) {
 Route::resource('users', App\Http\Controllers\Api\UserController::class);
 Route::post('auth/login', [App\Http\Controllers\Api\UserController::class,'login']);
 Route::resource('roles', App\Http\Controllers\Api\RoleController::class)->middleware(CheckCredentials::class);
-Route::resource('logs', App\Http\Controllers\Api\ActivityController::class)->middleware(CheckRoles::class);
+Route::resource('logs', App\Http\Controllers\Api\ActivityController::class);

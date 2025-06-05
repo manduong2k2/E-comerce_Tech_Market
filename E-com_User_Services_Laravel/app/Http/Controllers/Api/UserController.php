@@ -42,14 +42,9 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(User $user)
     {
-        $model = $this->repository->getById($id);
-        if (!$model) 
-        return response()->json([
-            'message' => 'User not found',
-        ], 404);
-        return $model;
+        return $user;
     }
 
     /**

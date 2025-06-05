@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Crypt;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -44,6 +45,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return LogOptions::defaults()
         ->logOnly(['name', 'email','phone']);
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($activity->subject_id && $activity->subject_type) {
+            $encrypted = Crypt::encryptString(json_encode($activity->subject->toArray()));
+            $activity->hashed_subject = $encrypted;
+        }
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.example.E_com_Product_Services.Entities;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +18,7 @@ public class Brand {
     private String description;
 
     private String image;
+
+    private List<Product> products;
 
 }

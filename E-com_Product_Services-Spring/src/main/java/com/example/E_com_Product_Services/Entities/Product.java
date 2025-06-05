@@ -50,5 +50,11 @@ public class Product {
     private String image;
 
     private Long user_id;
+    
+    @Transient
+    private Brand brand;
+
+    @Transient
+    private Category category;
 
 }

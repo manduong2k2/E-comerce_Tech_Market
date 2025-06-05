@@ -7,46 +7,58 @@ const multer = require('multer');
 const file = multer({ dest: 'resource/temps/' });
 const FormData = require('form-data');
 
-const BASE_URL = process.env.PRODUCT_SERVICE;
+const URL = process.env.BASE_URL +':'+ process.env.BRAND_SERVICE_PORT;
 
 //Get all
 router.get('/', async (req, res) => {
-    const response = await axios.get(`${BASE_URL}/api/brands/`);
-    res.status(response.status).json(response.data);
+    try {
+        const response = await axios.get(`${URL}/api/brands`);
+        res.status(response.status).json(response.data);
+    }
+    catch (error) {
+        res.send('ERR:'+error);
+        console.log(URL);
+    }
 });
 
 //Get by id
 router.get('/:id', async (req, res) => {
 
     try {
-        const response = await axios.get(`${BASE_URL}/api/brands/${req.params.id}`);
+        const response = await axios.get(`${URL}/api/brands/${req.params.id}`);
         res.status(response.status).json(response.data);
     }
     catch (error) {
-        res.status(error.response.status).send(error.response.data);
+        res.send(error);
+        console.log(error);
     }
 });
 
 //Create
 router.post('/', file.single('file'), async (req, res) => {
     try {
-        const filePath = req.file.path;
         const form = new FormData();
-        form.append('file', fs.createReadStream(filePath), req.file.originalname);
-        for (const key in req.body) {
-            form.append(key, req.body[key]);
+        let filePath = null;
+        if (req.file) {
+            filePath = req.file.path;
+            form.append('file', fs.createReadStream(filePath), req.file.originalname);
         }
-        const response = await axios.post(`${BASE_URL}/api/brands`, form, {
-            headers: {
-                ...form.getHeaders()
-            },
+        Object.entries(req.body).forEach(([key, value]) => {
+            form.append(key, value);
         });
-        fs.unlinkSync(filePath);
+        const response = await axios.post(`${URL}/api/brands`, form, {
+            headers: form.getHeaders(),
+        });
+        if (filePath) {
+            fs.unlinkSync(filePath);
+        }
         res.status(response.status).json(response.data);
     } catch (error) {
-        res.send(error);
+        console.error(error);
+        res.status(500).json({ error: error.message || 'Something went wrong' });
     }
 });
+
 
 //Update
 router.put('/:id', file.single('file'), async (req, res) => {
@@ -57,7 +69,7 @@ router.put('/:id', file.single('file'), async (req, res) => {
         for (const key in req.body) {
             form.append(key, req.body[key]);
         }
-        const response = await axios.put(`${BASE_URL}/api/brands/${req.params.id}`, form, {
+        const response = await axios.put(`${URL}/api/brands/${req.params.id}`, form, {
             headers: {
                 ...form.getHeaders()
             },
@@ -65,17 +77,19 @@ router.put('/:id', file.single('file'), async (req, res) => {
         fs.unlinkSync(filePath);
         res.status(response.status).json(response.data);
     } catch (error) {
-        res.status(error.response.status).send(error.response.data);
+        res.send(error);
+        console.log(error);
     }
 });
 
 //Delete by id
 router.delete('/:id', async (req, res) => {
     try {
-        const response = await axios.delete(`${BASE_URL}/api/brands/${req.params.id}`);
+        const response = await axios.delete(`${URL}/api/brands/${req.params.id}`);
         res.status(response.status).json(response.data);
     } catch (error) {
-        res.status(error.response.status).send(error.response.data);
+        res.send(error);
+        console.log(error);
     }
 });
 

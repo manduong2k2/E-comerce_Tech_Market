@@ -21,5 +21,9 @@ app.use('/api/categories', categoryRoutes);
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT ,()=>{
-    console.log('application started on port ' + PORT);
+    try{
+        console.log('application started on port ' + PORT);
+    } catch (error){
+        console.log(error);
+    }
 })

@@ -39,7 +39,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getBrandById(@PathVariable Long id) {
+    public ResponseEntity<?> getBrandById(@PathVariable Long id) {
         try {
             Category category = categoryService.getById(id);
             if (category == null) {
@@ -47,11 +47,7 @@ public class CategoryController {
                 response.put("message", "Category not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Category retrieved successfully");
-            response.put("product",new CategoryDTO(category));
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(new CategoryDTO(category));
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Failed to retrieve category");

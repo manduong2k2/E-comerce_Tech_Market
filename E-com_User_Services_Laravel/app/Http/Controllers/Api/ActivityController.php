@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Contracts\Repositories\IActivityRepository;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LogCollection;
+use App\Http\Resources\LogResource;
 use Illuminate\Http\Request;
+use Spatie\Activitylog\Models\Activity;
 
 class ActivityController extends Controller
 {
@@ -32,9 +34,9 @@ class ActivityController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Activity $activity)
     {
-        //
+        return $activity;
     }
 
     /**
