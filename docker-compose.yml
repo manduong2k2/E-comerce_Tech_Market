@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./E-com_User_Services_Laravel
+      dockerfile: Dockerfile
+    container_name: user_services
+    working_dir: /var/www/html
+    volumes:
+      - ./E-com_User_Services_Laravel:/var/www/html
+    depends_on:
+      - db
+    command: php-fpm
+
+  webserver:
+    image: nginx:alpine
+    container_name: nginx_laravel
+    volumes:
+      - ./E-com_User_Services_Laravel:/var/www/html
+      - ./Nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8000:80" # Project 1
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: e_com_user_services
+    volumes:
+      - db_data:/var/lib/mysql
+
+  composer:
+    image: composer:latest
+    container_name: composer_laravel
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    command: composer install
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: 123456    
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+  spring_service_1:
+    build:
+      context: ./E-com_Brand_Services-Spring
+      dockerfile: Dockerfile
+    container_name: brand_services
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/tech_market_brands
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+    depends_on:
+      - db
+volumes:
+  db_data:

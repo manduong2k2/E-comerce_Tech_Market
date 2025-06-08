@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ActivityLogOption;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -12,7 +13,7 @@ class Role extends Model
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-    use LogsActivity;
+    use LogsActivity, ActivityLogOption;
     /**
      * The attributes that are mass assignable.
      *
@@ -22,10 +23,7 @@ class Role extends Model
         'name',
         'description',
     ];
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()->logOnly(['name', 'email']);
-    }
+    
     public function users(){
         return $this->belongsToMany(User::class);
     }
